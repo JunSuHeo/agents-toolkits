@@ -1,0 +1,274 @@
+{
+  "$defs": {
+    "GateCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "argv": {
+          "items": {
+            "maxLength": 4096,
+            "pattern": "^[^\\x00]*$",
+            "type": "string"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "title": "Argv",
+          "type": "array"
+        },
+        "timeout_seconds": {
+          "default": 300,
+          "maximum": 3600,
+          "minimum": 1,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "argv"
+      ],
+      "title": "GateCommand",
+      "type": "object"
+    },
+    "Project": {
+      "additionalProperties": false,
+      "properties": {
+        "complexity": {
+          "default": "minimal",
+          "enum": [
+            "minimal",
+            "standard",
+            "extended"
+          ],
+          "title": "Complexity",
+          "type": "string"
+        },
+        "deployment": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "minLength": 1,
+              "pattern": "^[^\\r\\n\\x00]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deployment"
+        },
+        "multi_agent": {
+          "default": "auto",
+          "enum": [
+            "auto",
+            "off",
+            "on"
+          ],
+          "title": "Multi Agent",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[^\\r\\n\\x00]+$",
+          "title": "Name",
+          "type": "string"
+        },
+        "profile": {
+          "default": "minimal",
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "title": "Profile",
+          "type": "string"
+        },
+        "purpose": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "minLength": 1,
+              "pattern": "^[^\\x00]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Purpose"
+        },
+        "security_requirements": {
+          "items": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "pattern": "^[^\\x00]+$",
+            "type": "string"
+          },
+          "title": "Security Requirements",
+          "type": "array"
+        },
+        "team_size": {
+          "default": 1,
+          "maximum": 10000,
+          "minimum": 1,
+          "title": "Team Size",
+          "type": "integer"
+        },
+        "testing_requirements": {
+          "items": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "pattern": "^[^\\x00]+$",
+            "type": "string"
+          },
+          "title": "Testing Requirements",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Project",
+      "type": "object"
+    },
+    "QualityGates": {
+      "additionalProperties": false,
+      "properties": {
+        "commands": {
+          "patternProperties": {
+            "^[a-z0-9]+(?:-[a-z0-9]+)*$": {
+              "items": {
+                "$ref": "#/$defs/GateCommand"
+              },
+              "type": "array"
+            }
+          },
+          "propertyNames": {
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "title": "Commands",
+          "type": "object"
+        },
+        "not_applicable": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "title": "Not Applicable",
+          "type": "array"
+        },
+        "optional": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "title": "Optional",
+          "type": "array"
+        },
+        "required": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "title": "Required",
+          "type": "array"
+        }
+      },
+      "title": "QualityGates",
+      "type": "object"
+    },
+    "Selection": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "anyOf": [
+            {
+              "items": {
+                "maxLength": 64,
+                "minLength": 1,
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Enabled"
+        }
+      },
+      "title": "Selection",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agents": {
+      "$ref": "#/$defs/Selection"
+    },
+    "project": {
+      "$ref": "#/$defs/Project"
+    },
+    "quality_gates": {
+      "$ref": "#/$defs/QualityGates"
+    },
+    "schema_version": {
+      "default": 1,
+      "maximum": 1,
+      "minimum": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "skills": {
+      "$ref": "#/$defs/Selection"
+    },
+    "stack_conflict_notes": {
+      "additionalProperties": {
+        "maxLength": 1024,
+        "minLength": 1,
+        "pattern": "^[^\\x00]+$",
+        "type": "string"
+      },
+      "title": "Stack Conflict Notes",
+      "type": "object"
+    },
+    "stacks": {
+      "items": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "title": "Stacks",
+      "type": "array"
+    },
+    "tools": {
+      "items": {
+        "enum": [
+          "codex",
+          "claude",
+          "grok",
+          "generic"
+        ],
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Tools",
+      "type": "array"
+    }
+  },
+  "required": [
+    "project"
+  ],
+  "title": "ProjectConfig",
+  "type": "object"
+}

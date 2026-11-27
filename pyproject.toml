@@ -1,0 +1,36 @@
+[build-system]
+requires = ["uv_build>=0.12.10,<0.13"]
+build-backend = "uv_build"
+
+[project]
+name = "agent-toolkit"
+version = "0.1.2"
+description = "A local, model-independent development harness for coding agents"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = ["pydantic>=2.11,<3", "PyYAML>=6.0.2,<7"]
+
+[project.scripts]
+agent-toolkit = "agent_toolkit.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "ruff>=0.11,<1"]
+
+[tool.uv.build-backend]
+source-include = [
+    ".gitattributes", ".gitignore", ".github/workflows/ci.yml",
+    "AGENTS.md", "CLAUDE.md", "CHANGELOG.md",
+    "docs/**", "examples/**", "schemas/**", "scripts/**", "tests/**", "uv.lock",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]

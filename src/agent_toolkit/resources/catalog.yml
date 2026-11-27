@@ -1,0 +1,145 @@
+profiles:
+  minimal:
+    description: 소규모 작업을 위한 단일 작업자와 기본 검증
+    agents: [orchestrator]
+    skills: []
+    gates: []
+    workflows: [existing-project]
+    guidance: 작업 범위와 확인 명령은 작업 지시에서 관리한다. 반복되는 절차만 프로젝트 문서로 승격한다.
+  web-service:
+    description: 브라우저 UI와 서버·데이터 계층을 포함하는 웹서비스
+    agents: [frontend, backend, qa]
+    skills: [requirements-analysis]
+    gates: [accessibility]
+    workflows: [new-feature, deployment]
+    guidance: 인증, 주요 사용자 경로, 서버 검증을 설계하고 배포 전 환경별 설정을 확인한다.
+  backend-api:
+    description: 공개 또는 내부 API와 데이터 계약
+    agents: [architect, backend, qa]
+    skills: [requirements-analysis]
+    gates: [documentation]
+    workflows: [new-feature, deployment]
+    guidance: 인증·인가, 오류 응답, API 호환성, 쓰기의 멱등성을 계약과 테스트에 기록한다.
+  frontend:
+    description: 웹 프런트엔드 및 디자인 시스템
+    agents: [designer, frontend, qa]
+    skills: [requirements-analysis]
+    gates: [accessibility]
+    workflows: [new-feature]
+    guidance: 키보드 동작, 명확한 상태 메시지, 좁은 화면, 색상 대비와 실패 시 복구를 확인한다.
+  ai-agent:
+    description: 도구를 사용하는 AI 서비스 및 평가 파이프라인
+    agents: [ai-engineer, backend, qa, security]
+    skills: [requirements-analysis, security-audit]
+    gates: [documentation]
+    workflows: [new-feature, incident-response]
+    guidance: 모델 출력을 검증하고 도구 권한을 분리한다. 프롬프트 변경은 고정 평가 입력과 부정 사례로 확인한다.
+  automation:
+    description: 배치, 반복 업무 및 로컬 자동화
+    agents: [backend, qa]
+    skills: [ci-debugging]
+    gates: []
+    workflows: [bug-fix]
+    guidance: 실행 범위, 예상 결과, 멱등성, 시간 제한과 부분 실패 후 재시작을 명시한다.
+  data-pipeline:
+    description: 수집, 처리, 적재 및 고처리량 데이터 작업
+    agents: [backend, database, qa]
+    skills: [task-decomposition]
+    gates: [performance]
+    workflows: [new-feature, incident-response]
+    guidance: 체크포인트, 재처리, 중복 제거와 순서 보장을 명시한다. 대표 부하의 메모리·처리량 기준을 측정한다.
+  desktop-app:
+    description: 파일 및 OS 기능과 상호작용하는 데스크톱 앱
+    agents: [frontend, backend, qa]
+    skills: [requirements-analysis]
+    gates: [accessibility]
+    workflows: [new-feature, deployment]
+    guidance: OS별 경로와 파일 접근 권한, 설치·업데이트 복구 및 키보드 탐색을 검증한다.
+  mobile-app:
+    description: 모바일 앱과 기기·권한별 사용자 동작
+    agents: [designer, frontend, qa]
+    skills: [requirements-analysis]
+    gates: [accessibility]
+    workflows: [new-feature, deployment]
+    guidance: 권한 거절과 오프라인 상태를 테스트하고 실제 기기에서 접근성과 화면 전환을 확인한다.
+  library:
+    description: 다른 프로젝트가 의존하는 라이브러리
+    agents: [architect, reviewer, qa]
+    skills: [requirements-analysis]
+    gates: [documentation, release]
+    workflows: [new-feature, deployment]
+    guidance: 공개 API와 호환성 범위를 설명하고 패키지를 설치한 소비자 경로에서 스모크 테스트한다.
+stacks:
+  nextjs:
+    description: Next.js 웹 애플리케이션
+    requires: [react]
+    guidance: 서버와 클라이언트 컴포넌트의 경계를 유지한다. 서버 비밀이 브라우저 번들 또는 직렬화된 props에 포함되지 않는지 빌드 결과를 확인한다.
+  react:
+    description: React UI
+    guidance: 사용자 관찰 동작을 테스트하고 파생 값은 렌더링에서 계산한다. 비동기 UI의 로딩, 실패, 빈 상태를 다룬다.
+  typescript:
+    description: TypeScript 정적 타입 검사
+    guidance: 입력 경계에서 런타임 검증을 먼저 수행하고 저장소의 엄격한 타입 검사 명령을 실행한다.
+  python:
+    description: Python 서비스 및 자동화
+    guidance: 가상환경과 잠금 파일을 사용한다. 외부 입력을 검증하고 테스트가 로컬·CI에서 같은 진입점을 사용하도록 한다.
+  fastapi:
+    description: FastAPI HTTP 서비스
+    requires: [python]
+    guidance: 라우터 의존성으로 권한 검사를 적용한다. HTTP 상태, 검증 오류, OpenAPI 변경을 계약 테스트에서 확인한다.
+  langgraph:
+    description: LangGraph 기반 상태형 에이전트
+    requires: [python]
+    guidance: 상태 스키마와 종료 조건을 명시한다. 승인 후 재개하는 노드는 재시도 가능한 부작용과 체크포인트 복원으로 검증한다.
+  langgraph-js:
+    description: JavaScript 또는 TypeScript 기반 LangGraph 에이전트
+    guidance: 상태와 그래프 종료 조건을 명시한다. 체크포인트 복원, 도구 오류와 승인 후 재개를 JavaScript 환경에서 검증한다.
+  java:
+    description: JVM 애플리케이션
+    guidance: 프로젝트 wrapper로 빌드하고 지원 JDK를 선언한다. 직렬화 계약과 예외 전파를 테스트한다.
+  spring-boot:
+    description: Spring Boot 백엔드
+    requires: [java]
+    guidance: 설정 프로필에 비밀값을 넣지 않는다. 컨트롤러 계약, 권한 필터, 트랜잭션 롤백을 통합 테스트한다.
+  rust:
+    description: Rust 애플리케이션
+    guidance: cargo fmt, clippy, test를 프로젝트 정책에 맞춰 실행한다. 대표 입력으로 메모리와 백프레셔를 측정한다.
+  tauri:
+    description: Tauri 데스크톱 애플리케이션
+    requires: [rust]
+    guidance: 프론트엔드 호출 권한을 최소화하고 각 OS 패키지 빌드와 명령 입력 검증을 확인한다.
+  postgresql:
+    description: PostgreSQL 데이터 계층
+    guidance: 마이그레이션 잠금과 읽기·쓰기 역할을 검토한다. 대표 데이터의 실행 계획과 롤백 절차를 확인한다.
+  supabase:
+    description: Supabase 앱과 관리형 PostgreSQL
+    requires: [postgresql]
+    guidance: 클라이언트 키와 서버 비밀을 분리한다. 서로 다른 사용자와 익명 역할에서 행 수준 보안 및 정책 회귀를 확인한다.
+  oracle:
+    description: Oracle Database
+    guidance: 지원 드라이버와 데이터 타입 매핑을 고정한다. 바인딩, 배치 크기, 잠금과 세션 설정을 대표 데이터에서 검증한다.
+  redis:
+    description: Redis 캐시와 짧은 수명 상태
+    guidance: TTL, 키 이름 공간, 캐시 상실과 원본 시스템 압력 증가를 테스트한다. 캐시만으로 인가 결정을 보존하지 않는다.
+  elasticsearch:
+    description: Elasticsearch 검색 및 인덱싱
+    guidance: 매핑 변경을 버전별 인덱스에 적용한다. 대표 쿼리와 alias 전환·복원으로 검증한다.
+  opensearch:
+    description: OpenSearch 검색 및 인덱싱
+    guidance: 버전별 호환성, 권한과 인덱스 매핑을 확인한다. 대표 쿼리의 결과와 응답시간을 검증한다.
+  docker:
+    description: Docker 이미지 및 로컬 환경
+    guidance: 빌드 시 비밀을 이미지 레이어에 남기지 않는다. 최소 권한 사용자와 필요한 포트만 사용하고 health check를 확인한다.
+conflicts:
+  - stacks: [elasticsearch, opensearch]
+    reason: 같은 검색 계층을 대상으로 한다. 실제 이관이나 이중 운영이면 stack_conflict_notes에 경계와 검증 계획을 기록한다.
+  - stacks: [oracle, postgresql]
+    reason: 데이터베이스 책임이 겹칠 수 있다. 서로 다른 데이터 소유권 또는 이관 계획을 stack_conflict_notes에 기록한다.
+gates:
+  code-quality: 소스 진입점, 빌드, 정적 분석, 포맷과 변경 범위를 확인한다.
+  test-quality: 단위·통합·E2E·회귀 중 변경 위험과 관련된 검증을 실행하고 결과를 기록한다.
+  security: 비밀, 권한, 외부 입력, 의존성, 공급망과 운영 경계를 확인한다.
+  performance: 비교 환경과 데이터셋을 고정하고 지연, 처리량 및 메모리 기준을 확인한다.
+  accessibility: 주요 경로를 키보드로 완료하고 이름, 포커스, 오류 안내 및 대비를 확인한다.
+  documentation: 실제 명령과 동작을 문서와 대조하고 사용자에게 필요한 변경을 기록한다.
+  release: 패키징, 설치, 변경 이력, 롤백 경로와 배포 승인을 확인한다.

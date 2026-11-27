@@ -1,0 +1,12 @@
+schema_version: 1
+project:
+  name: catalog-web
+  purpose: 고객이 상품을 검색하는 웹서비스
+  profile: web-service
+  complexity: standard
+  team_size: 4
+  deployment: GitHub Actions를 거치는 테스트 및 운영 환경
+  security_requirements: [사용자 행 수준 권한 검증]
+  testing_requirements: [키보드 탐색 및 로그인 회귀 테스트]
+stacks: [nextjs, typescript, supabase]
+tools: [codex, claude]
