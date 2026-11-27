@@ -22,8 +22,6 @@ from .models import (
 RESOURCES = files("agent_toolkit").joinpath("resources")
 CORE = ("security", "development", "verification", "collaboration")
 REQUIRED_GATES = ("code-quality", "test-quality", "security")
-STANDARD_SKILLS = ("code-review", "handoff", "testing-verification")
-EXTENDED_SKILLS = ("task-decomposition", "ci-debugging", "security-audit", "agent-improvement")
 
 
 class Stack(Model):
@@ -38,6 +36,8 @@ class StackConflict(Model):
 
 
 class Catalog(Model):
+    standard_skills: list[Identifier]
+    extended_skills: list[Identifier]
     profiles: dict[Identifier, Profile]
     stacks: dict[Identifier, Stack]
     gates: dict[Identifier, Text]
@@ -192,10 +192,10 @@ def resolve(config: ProjectConfig) -> Resolved:
     if selected is None:
         selected = ["testing-verification"]
         if project.complexity != "minimal":
-            selected = list(dict.fromkeys([*STANDARD_SKILLS, *profile.skills]))
+            selected = list(dict.fromkeys([*entries.standard_skills, *profile.skills]))
         if project.complexity == "extended":
             extras = ["parallel-development"] if len(agents) > 1 else []
-            selected = list(dict.fromkeys([*selected, *EXTENDED_SKILLS, *extras]))
+            selected = list(dict.fromkeys([*selected, *entries.extended_skills, *extras]))
     skills = expand(
         without_duplicates(selected, "skills.enabled"),
         skill_catalog(),

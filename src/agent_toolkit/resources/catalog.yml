@@ -1,3 +1,5 @@
+standard_skills: [code-review, handoff, testing-verification, repository-mapping, bug-diagnosis]
+extended_skills: [task-decomposition, ci-debugging, security-audit, agent-improvement, behavior-preserving-refactor, release-verification]
 profiles:
   minimal:
     description: 소규모 작업을 위한 단일 작업자와 기본 검증
@@ -9,63 +11,63 @@ profiles:
   web-service:
     description: 브라우저 UI와 서버·데이터 계층을 포함하는 웹서비스
     agents: [frontend, backend, qa]
-    skills: [requirements-analysis]
+    skills: [requirements-analysis, api-compatibility, accessibility-review]
     gates: [accessibility]
     workflows: [new-feature, deployment]
     guidance: 인증, 주요 사용자 경로, 서버 검증을 설계하고 배포 전 환경별 설정을 확인한다.
   backend-api:
     description: 공개 또는 내부 API와 데이터 계약
     agents: [architect, backend, qa]
-    skills: [requirements-analysis]
+    skills: [requirements-analysis, api-compatibility]
     gates: [documentation]
     workflows: [new-feature, deployment]
     guidance: 인증·인가, 오류 응답, API 호환성, 쓰기의 멱등성을 계약과 테스트에 기록한다.
   frontend:
     description: 웹 프런트엔드 및 디자인 시스템
     agents: [designer, frontend, qa]
-    skills: [requirements-analysis]
+    skills: [requirements-analysis, accessibility-review]
     gates: [accessibility]
     workflows: [new-feature]
     guidance: 키보드 동작, 명확한 상태 메시지, 좁은 화면, 색상 대비와 실패 시 복구를 확인한다.
   ai-agent:
     description: 도구를 사용하는 AI 서비스 및 평가 파이프라인
     agents: [ai-engineer, backend, qa, security]
-    skills: [requirements-analysis, security-audit]
+    skills: [requirements-analysis, security-audit, agent-evaluation]
     gates: [documentation]
     workflows: [new-feature, incident-response]
     guidance: 모델 출력을 검증하고 도구 권한을 분리한다. 프롬프트 변경은 고정 평가 입력과 부정 사례로 확인한다.
   automation:
     description: 배치, 반복 업무 및 로컬 자동화
     agents: [backend, qa]
-    skills: [ci-debugging]
+    skills: [ci-debugging, data-replay]
     gates: []
     workflows: [bug-fix]
     guidance: 실행 범위, 예상 결과, 멱등성, 시간 제한과 부분 실패 후 재시작을 명시한다.
   data-pipeline:
     description: 수집, 처리, 적재 및 고처리량 데이터 작업
     agents: [backend, database, qa]
-    skills: [task-decomposition]
+    skills: [task-decomposition, data-replay, performance-investigation]
     gates: [performance]
     workflows: [new-feature, incident-response]
     guidance: 체크포인트, 재처리, 중복 제거와 순서 보장을 명시한다. 대표 부하의 메모리·처리량 기준을 측정한다.
   desktop-app:
     description: 파일 및 OS 기능과 상호작용하는 데스크톱 앱
     agents: [frontend, backend, qa]
-    skills: [requirements-analysis]
+    skills: [requirements-analysis, accessibility-review, release-verification]
     gates: [accessibility]
     workflows: [new-feature, deployment]
     guidance: OS별 경로와 파일 접근 권한, 설치·업데이트 복구 및 키보드 탐색을 검증한다.
   mobile-app:
     description: 모바일 앱과 기기·권한별 사용자 동작
     agents: [designer, frontend, qa]
-    skills: [requirements-analysis]
+    skills: [requirements-analysis, accessibility-review]
     gates: [accessibility]
     workflows: [new-feature, deployment]
     guidance: 권한 거절과 오프라인 상태를 테스트하고 실제 기기에서 접근성과 화면 전환을 확인한다.
   library:
     description: 다른 프로젝트가 의존하는 라이브러리
     agents: [architect, reviewer, qa]
-    skills: [requirements-analysis]
+    skills: [requirements-analysis, api-compatibility, release-verification]
     gates: [documentation, release]
     workflows: [new-feature, deployment]
     guidance: 공개 API와 호환성 범위를 설명하고 패키지를 설치한 소비자 경로에서 스모크 테스트한다.
