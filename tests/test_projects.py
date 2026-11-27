@@ -38,6 +38,8 @@ def snapshot(root):
             {"react", "nextjs", "typescript", "postgresql", "supabase"},
             {
                 ".agents/skills/code-review/SKILL.md",
+                ".agents/skills/repository-mapping/SKILL.md",
+                ".claude/skills/accessibility-review/SKILL.md",
                 "CLAUDE.md",
                 ".claude/agents/toolkit-frontend.md",
             },
@@ -46,19 +48,29 @@ def snapshot(root):
             "ai-agent",
             "ai-agent",
             {"python", "fastapi", "langgraph", "postgresql"},
-            {".grok/skills/security-audit/SKILL.md", ".codex/agents/toolkit-ai-engineer.toml"},
+            {
+                ".grok/skills/agent-evaluation/SKILL.md",
+                ".grok/skills/behavior-preserving-refactor/SKILL.md",
+                ".agents/skills/release-verification/SKILL.md",
+                ".grok/skills/security-audit/SKILL.md",
+                ".codex/agents/toolkit-ai-engineer.toml",
+            },
         ),
         (
             "data-pipeline",
             "data-pipeline",
             {"rust", "oracle"},
-            {".agent-toolkit/agents/database.md"},
+            {
+                ".agent-toolkit/agents/database.md",
+                ".agent-toolkit/skills/data-replay/SKILL.md",
+                ".agent-toolkit/skills/performance-investigation/SKILL.md",
+            },
         ),
         (
             "backend-api",
             "backend-api",
             {"java", "spring-boot", "oracle", "docker"},
-            {".claude/agents/toolkit-backend.md"},
+            {".claude/agents/toolkit-backend.md", ".claude/skills/api-compatibility/SKILL.md"},
         ),
         (
             "automation",
@@ -80,6 +92,10 @@ def test_examples(example, profile, stacks, signals, tmp_path):
     assert record["profile"] == profile
     assert set(record["stacks"]) == stacks
     assert signals <= record["managed_files"].keys()
+    if profile == "web-service":
+        assert "bug-diagnosis" in record["skills"]
+        assert "behavior-preserving-refactor" not in record["skills"]
+        assert "data-replay" not in record["skills"]
     for file in root.glob(".codex/agents/*.toml"):
         agent = tomllib.loads(file.read_text(encoding="utf-8"))
         assert agent.keys() == {"name", "description", "developer_instructions"}
@@ -88,6 +104,7 @@ def test_examples(example, profile, stacks, signals, tmp_path):
         front = yaml.safe_load(file.read_text(encoding="utf-8").split("---\n", 2)[1])
         assert front["name"] == file.stem
     if profile == "automation":
+        assert record["skills"] == ["testing-verification"]
         assert record["agents"] == ["orchestrator"]
         assert not (root / "docs").exists()
         assert not (root / ".agent-toolkit/workflows").exists()
@@ -379,7 +396,40 @@ def test_catalog_references_resolve_for_each_profile():
             RESOURCES.joinpath("workflows", f"{step}.md").is_file() for step in selection.workflows
         )
     assert "langgraph-js" in catalog().stacks
-    assert len(skill_catalog()) == 10
+    assert "project-init" in skill_catalog()
+    # Every packaged skill can also be requested explicitly, including opt-in skills.
+    config = ProjectConfig(project=Project(name="all-skills"))
+    config.skills.enabled = list(skill_catalog())
+    assert set(resolve(config).skills) == set(skill_catalog())
+
+
+def test_new_default_skill_does_not_overwrite_team_skill_on_update(tmp_path, capsys):
+    assert (
+        call(
+            tmp_path,
+            "init",
+            "--profile",
+            "backend-api",
+            "--complexity",
+            "minimal",
+            "--tools",
+            "codex",
+        )
+        == 0
+    )
+    config_file = tmp_path / "agent-toolkit.yml"
+    config = yaml.safe_load(config_file.read_bytes())
+    config["project"]["complexity"] = "standard"
+    config_file.write_text(yaml.safe_dump(config), encoding="utf-8")
+    team_file = tmp_path / ".agents/skills/bug-diagnosis/SKILL.md"
+    team_file.parent.mkdir(parents=True)
+    team_file.write_text("Team workflow\n", encoding="utf-8")
+    before = snapshot(tmp_path)
+    assert call(tmp_path, "update", "--apply") == 1
+    assert (
+        "Existing unmanaged file: .agents/skills/bug-diagnosis/SKILL.md" in capsys.readouterr().out
+    )
+    assert snapshot(tmp_path) == before
 
 
 def test_managed_commands_find_parent_and_nested_creation_requires_opt_in(

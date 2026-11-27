@@ -23,6 +23,12 @@ description: 새 프로젝트나 기존 저장소에 Toolkit 구성을 결정하
 3. 계획을 검토하고 기존 지침 연결 방법과 소유자 파일을 기록한 뒤 적용한다.
 4. `agent-toolkit validate`와 `status`로 결과를 확인한다.
 
+## 구성 선택 예시 — 기존 API 저장소 도입
+
+기존 FastAPI 서비스에 `AGENTS.md`와 팀 소유 리뷰 스킬이 있다면, `agent-toolkit inspect`의 감지 근거를 실제 의존성 선언과 대조한다. `agent-toolkit adopt --profile backend-api --tools codex`로 기존 지침의 보존과 생성 예정 경로를 확인한다.
+
+같은 위치에 팀 소유 `code-review/SKILL.md`가 있으면 미관리 파일 충돌이다. 팀 스킬을 유지할 경우 필요한 다른 스킬을 `--skills`로 명시해 다시 미리본다. 적용 의사가 확인된 계획에만 `--apply`를 붙인다. 기존 루트 문서에서 공통 가이드로 연결할 위치는 팀 소유 항목으로 남긴다.
+
 ## 출력과 검증
 
 구성 선택, 계획, 적용 결과 및 남은 수동 연결 목록. 이전 파일의 해시, 예상 Adapter 경로, 검증 종료 코드를 확인한다.

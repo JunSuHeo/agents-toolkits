@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | 0 조사 및 설계 | 구현 | [조사](RESEARCH.md), [요구사항](SPEC.md), [결정](DECISIONS.md), [설계](ARCHITECTURE.md) |
 | 1 공통 개발 표준 | 구현 | Core, 10개 Profile, 17개 Stack, 12개 역할, 워크플로, 문서 템플릿, JSON Schema |
-| 2 핵심 Skills | 구현 | 10개 Skill, 설명 검색, 명시적 선택과 의존성 해석 |
+| 2 핵심 Skills | 구현 | 19개 Skill, 작업별 판단 기준과 예시, 설명 검색, 프로필별 기본값, 명시적 선택과 의존성 해석 |
 | 3 초기화 엔진 | 구현 | `init`, `inspect`, `adopt`, 구성 검증, 충돌 제어 |
 | 4 Adapters | 구현 | Codex와 Claude Code 역할, Codex·Claude Code·Grok Build Skills, Generic 및 Grok의 공통 역할 |
 | 5 버전 및 검증 | 구현 | Lock, 상태, 변경 비교, 복구, Gate, 패키지와 CI |

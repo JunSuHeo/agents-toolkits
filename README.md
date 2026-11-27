@@ -39,6 +39,24 @@ agent-toolkit validate --path ./my-web
 
 [예제 설정](examples/)에는 Next.js/Supabase 웹서비스, FastAPI/LangGraph, Rust/Oracle, Spring Boot/Docker, 소규모 Python 자동화와 기존 저장소 테스트용 fixture가 있습니다.
 
+## 작업에 맞는 스킬 고르기
+
+최소 구성은 `testing-verification` 하나로 시작합니다. 표준 구성은 공통 5개에 프로필별 스킬을 더합니다. 확장 구성은 표준 선택을 포함하며, 여러 역할을 활성화했을 때 병렬 개발도 포함합니다. 아래는 기본 선택에 따른 사용 예입니다.
+
+| 작업 | 사용할 스킬 | 기본으로 포함하는 구성 |
+| --- | --- | --- |
+| 낯선 코드에서 기능의 진입점을 찾거나 결함 원인을 좁히기 | `repository-mapping`, `bug-diagnosis` | 표준·확장 공통 |
+| 변경 리뷰, 인수 조건 검증, 다음 작업자에게 전달 | `code-review`, `testing-verification`, `handoff` | 표준·확장 공통 |
+| 구버전 호출자로 새 인터페이스 검증 | `api-compatibility` | 웹서비스·백엔드 API·라이브러리의 표준 이상 |
+| 키보드로 입력·오류·복귀 경로 확인 | `accessibility-review` | 웹서비스·프런트엔드·데스크톱·모바일의 표준 이상 |
+| 실패한 배치 재개, 처리량과 비용 측정 | `data-replay`, `performance-investigation` | 데이터 파이프라인의 표준 이상. 자동화는 재처리 포함 |
+| 프롬프트나 도구 선택 변경 전후 평가 | `agent-evaluation` | AI 에이전트의 표준 이상 |
+| 내부 구조 변경 전후의 동작 비교, 설치본 검증 | `behavior-preserving-refactor`, `release-verification` | 확장 공통. 라이브러리·데스크톱은 표준에도 설치본 검증 포함 |
+
+예를 들어 월말 거래가 CSV에서 빠진다면 `bug-diagnosis`로 조회 결과와 CSV 중 어디에서 행이 사라지는지 좁힙니다. 수정 후에는 `testing-verification`의 기록 예시를 따라 같은 입력의 수정 전·후 결과와 실제 파일 내용을 남깁니다. 설치된 스킬의 설명과 경로는 프로젝트의 `.agent-toolkit/GUIDE.md`에서 확인합니다.
+
+특정 스킬만 쓰려면 `--skills`에 원하는 목록 전체를 지정합니다. 기존 프로젝트에서 자동 선택을 쓰는 경우 새 CLI로 `agent-toolkit update --dry-run`을 실행하면 새로 생길 파일과 바뀔 파일을 확인할 수 있습니다.
+
 ## 기존 프로젝트에 적용
 
 프로젝트 루트에서 실행합니다. `inspect`는 알려진 파일 위치, 의존성 선언과 Git 상태에서 후보를 찾습니다. 추정한 Profile, Stack과 근거 파일을 적용 전에 검토할 수 있습니다. npm 스택은 `package.json`의 의존성 이름으로 감지합니다. `langgraph-js`는 JavaScript 또는 TypeScript용이며 기존 `langgraph`는 Python용입니다. 이미 적용된 선택은 `agent-toolkit.yml`에서 수정할 수 있습니다.
