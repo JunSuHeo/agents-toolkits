@@ -1,0 +1,12 @@
+schema_version: 1
+project:
+  name: document-agent
+  purpose: 문서 근거를 검증하는 로컬 평가용 에이전트
+  profile: ai-agent
+  complexity: extended
+  team_size: 3
+  deployment: 개발용 로컬 컨테이너
+  security_requirements: [외부 입력과 도구 실행 권한 분리, 원본 사용자 입력 로그 제외]
+  testing_requirements: [고정 프롬프트 평가, 비신뢰 입력과 승인 절차 회귀 테스트]
+stacks: [python, fastapi, langgraph, postgresql]
+tools: [generic, codex, grok]

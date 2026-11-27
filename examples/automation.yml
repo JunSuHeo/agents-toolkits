@@ -1,0 +1,9 @@
+schema_version: 1
+project:
+  name: local-report
+  purpose: 로컬 보고서 작업
+  profile: automation
+  complexity: minimal
+  multi_agent: "off"
+stacks: [python]
+tools: [generic]

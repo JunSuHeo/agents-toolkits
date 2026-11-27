@@ -1,0 +1,14 @@
+schema_version: 1
+project:
+  name: batch-ingest
+  purpose: 대용량 일괄 처리와 Oracle 적재
+  profile: data-pipeline
+  complexity: standard
+  deployment: Linux
+  testing_requirements:
+    - 합성 100만 레코드에서 처리량 초당 5000건 이상
+    - 대표 배치 최대 RSS 512 MiB
+stacks: [rust, oracle]
+tools: [generic]
+quality_gates:
+  required: [performance]

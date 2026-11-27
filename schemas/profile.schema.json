@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agents": {
+      "items": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "title": "Agents",
+      "type": "array"
+    },
+    "description": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^[^\\x00]+$",
+      "title": "Description",
+      "type": "string"
+    },
+    "gates": {
+      "items": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "title": "Gates",
+      "type": "array"
+    },
+    "guidance": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^[^\\x00]+$",
+      "title": "Guidance",
+      "type": "string"
+    },
+    "skills": {
+      "items": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "title": "Skills",
+      "type": "array"
+    },
+    "workflows": {
+      "items": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "title": "Workflows",
+      "type": "array"
+    }
+  },
+  "required": [
+    "description",
+    "guidance",
+    "agents",
+    "skills",
+    "gates",
+    "workflows"
+  ],
+  "title": "Profile",
+  "type": "object"
+}

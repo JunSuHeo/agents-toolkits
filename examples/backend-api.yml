@@ -1,0 +1,11 @@
+schema_version: 1
+project:
+  name: operations-api
+  purpose: 업무 시스템 API
+  profile: backend-api
+  complexity: standard
+  deployment: Docker
+  security_requirements: [DB 계정의 스키마 변경과 쓰기 권한 분리]
+  testing_requirements: [HTTP 계약 및 실패 시 롤백 테스트]
+stacks: [java, spring-boot, oracle, docker]
+tools: [claude, generic]

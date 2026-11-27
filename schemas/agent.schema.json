@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "changes": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^[^\\x00]+$",
+      "title": "Changes",
+      "type": "string"
+    },
+    "description": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^[^\\x00]+$",
+      "title": "Description",
+      "type": "string"
+    },
+    "input": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^[^\\x00]+$",
+      "title": "Input",
+      "type": "string"
+    },
+    "read_only": {
+      "default": false,
+      "title": "Read Only",
+      "type": "boolean"
+    },
+    "scope": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^[^\\x00]+$",
+      "title": "Scope",
+      "type": "string"
+    },
+    "tools": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^[^\\x00]+$",
+      "title": "Tools",
+      "type": "string"
+    },
+    "trigger": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^[^\\x00]+$",
+      "title": "Trigger",
+      "type": "string"
+    },
+    "verification": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^[^\\x00]+$",
+      "title": "Verification",
+      "type": "string"
+    }
+  },
+  "required": [
+    "description",
+    "trigger",
+    "input",
+    "scope",
+    "tools",
+    "changes",
+    "verification"
+  ],
+  "title": "Agent",
+  "type": "object"
+}
