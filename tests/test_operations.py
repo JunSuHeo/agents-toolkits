@@ -71,9 +71,24 @@ def test_critical_requires_separate_verifier(tmp_path, capsys):
     assert "Selected roles: orchestrator" in capsys.readouterr().out
 
 
-def test_worktree_requires_clean_status_to_remove(tmp_path, capsys):
+def test_worktree_requires_clean_status_to_remove(tmp_path, capsys, monkeypatch):
+    # Keep the fixture independent of runner configuration such as system Git LFS.
+    config = tmp_path / "fixture.gitconfig"
+    config.touch()
+    isolation = {"GIT_CONFIG_GLOBAL": str(config), "GIT_CONFIG_NOSYSTEM": "1"}
+    run = subprocess.run
+
+    def run_with_fixture_config(args, **kwargs):
+        env = kwargs.get("env") or os.environ
+        return run(args, **(kwargs | {"env": env | isolation}))
+
+    monkeypatch.setattr(subprocess, "run", run_with_fixture_config)
     root = tmp_path / "checkout"
     git = checkout(root)
+    subprocess.run([git, "config", "filter.fixture.clean", "fixture-filter"], cwd=root, check=True)
+    assert call(root, "worktree", "create", "feature/login") == 1
+    assert "without external filters" in capsys.readouterr().err
+    subprocess.run([git, "config", "--remove-section", "filter.fixture"], cwd=root, check=True)
     assert call(root, "worktree", "create", "../unsafe") == 1
     original = (root / "app.txt").read_bytes()
     (root / "app.txt").write_bytes(b"Local uncommitted change")
